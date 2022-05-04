@@ -1,0 +1,11 @@
+apiVersion: accelerator.apps.tanzu.vmware.com/v1alpha1
+kind: Accelerator
+metadata:
+  name: f150l-accelerator
+  namespace: accelerator-system
+spec:
+  git:
+    url: https://github.com/cgsamp/tap-accelerator
+    interval: 10s
+    ref:
+      branch: main

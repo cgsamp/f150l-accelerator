@@ -1,0 +1,84 @@
+accelerator:
+  displayName: F150 Lightning Toolkit
+  description: Create in-vehicle infotainment app for the F150 Lightning
+  iconUrl: https://raw.githubusercontent.com/cgsamp/f150l-accelerator/main/img/f150l.png
+  tags:
+    - AndroidAuto
+    - SpringAPI
+    - In-vehicle
+    - Infotainment
+  options:
+    - name: databaseType
+      label: Database Type
+      inputType: select
+      dataType: string
+      display: true
+      required: true
+      defaultValue: "BigQuery"
+      choices:
+        - text: GCP BigQuery
+          value: "BigQuery"
+        - text: Microsoft SQL Server EDC1/2
+          value: "mssql"
+        - text: Postgres on Kubernetes
+          value: "postgres"
+    - name: memoryCache
+      label: Include a cache (Redis)?
+      inputType: toggle
+      display: false
+      dataType: boolean
+      defaultValue: false
+
+engine:
+  merge:
+    - include: [ "**/**" ]
+      exclude: [ "reg.yaml", "components/database/**", "applications/**", "ytt/**" ]
+    - include: [ "settings.gradle.kts" ]
+      chain:
+        - type: ReplaceText
+          substitutions:
+            - text: example-spring-accelerator
+              with: "#artifactId"
+    - condition: "#javaVersion == '17'"
+      include: [ "buildSrc/src/main/kotlin/java-library-conventions.gradle.kts" ]
+      chain:
+        - type: ReplaceText
+          substitutions:
+            - text: JavaLanguageVersion.of(11)
+              with: "'JavaLanguageVersion.of(17)'"
+    - include: [ ".github/workflows/build.yml" ]
+      chain:
+        - type: ReplaceText
+          condition: "#javaVersion == '17'"
+          substitutions:
+            - text: 11
+              with: "'17'"
+        - type: ReplaceText
+          condition: "#sonar == false"
+          substitutions:
+            - text: sonarqube
+              with: "''"
+    - condition: "#noDB == true"
+      include: [ "applications/billboard-stateless/**" ]
+    - condition: "#noDB == false"
+      include: [ "components/database/**", "applications/billboard/**" ]
+    - include: [ "build.gradle.kts"]
+      chain:
+        - type: ReplaceText
+          condition: "#sonar == true"
+          substitutions:
+            - text: asaikali_example-spring-accelerator
+              with: "#projectKey"
+        - type: ReplaceText
+          condition: "#sonar == false"
+          substitutions:
+            - text: |
+                sonarqube {
+                    properties {
+                        property("sonar.projectKey", "asaikali_example-spring-accelerator")
+                        property("sonar.organization", "asaikali")
+                        property("sonar.host.url", "https://sonarcloud.io")
+                    }
+                }
+              with: "''"
+
