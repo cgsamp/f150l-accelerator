@@ -11,6 +11,7 @@ accelerator:
     - name: api-connections
       label: API Connections
       inputType: checkbox
+      dataType: [string]
       choices:
         - text: Entertainment App Catalog
           value: entertainment-app-catalog
