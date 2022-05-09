@@ -1,6 +1,6 @@
 accelerator:
-  displayName: F150 Lightning Toolkit
-  description: Create in-vehicle infotainment app for the F150 Lightning
+  displayName: Lightning EV Toolkit
+  description: Create in-vehicle infotainment app for the EV vehicle lineup
   iconUrl: https://raw.githubusercontent.com/cgsamp/f150l-accelerator/main/img/f150l.png
   tags:
     - AndroidAuto
@@ -8,6 +8,16 @@ accelerator:
     - In-vehicle
     - Infotainment
   options:
+    - name: api-connections
+      label: API Connections
+      inputType: checkbox
+      choices:
+        - text: Entertainment App Catalog
+          value: entertainment-app-catalog
+        - text: Advanced Navigation
+          value: advanced-navigation
+        - text: BlueCruise
+          value: bluecruise
     - name: databaseType
       label: Database Type
       inputType: select
